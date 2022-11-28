@@ -3,16 +3,14 @@ from pygame import mixer
 import time
 import os
 
+import parameters
 
-TEMP = "temp"
-STANDARD = "standard"
 
 
 ttsCounter = 0
 
 def Initialise():
     mixer.init()
-
 
 
 def IsBusy():
@@ -24,7 +22,7 @@ def PauseWhileBusy():
         time.sleep(0.25)
 
 def Say(path, blocking=False):
-    mixer.music.load(path)
+    music = mixer.music.load(path)
     mixer.music.play()
 
 
@@ -34,7 +32,7 @@ def Say(path, blocking=False):
 
 
 def SayStandard(path, blocking=False):
-    Say(os.path.join(STANDARD,path), blocking)
+    Say(os.path.join(parameters.STANDARD_AUDIO_PATH,path), blocking)
 
 
 def GenerateTTS(text,name=""):
@@ -44,20 +42,17 @@ def GenerateTTS(text,name=""):
     if name == "":
         if(ttsCounter >= 4): ttsCounter = 0
 
-        path = os.path.join(TEMP,"tts" + str(ttsCounter) + ".mp3")
+        path = os.path.join(parameters.TEMP_PATH,"tts" + str(ttsCounter) + ".mp3")
 
         if(os.path.exists(path)): os.remove(path)
+        ttsCounter += 1
     else:
         path = name + ".mp3"
     
 
     tts = gTTS(text=text, lang="en", tld="co.uk", slow=False)
 
-    name = os.path.join(path)
-    tts.save(name)
+    tts.save(path)
 
 
-    ttsCounter += 1
-
-
-    return name
+    return path

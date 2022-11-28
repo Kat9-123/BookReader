@@ -1,11 +1,10 @@
 import cv2
+import os
 
-PATH = "temp\\orig.png"
-CAMERA_PORT = 1
+import parameters
 
-READ_FROM_PATH = True
 
-WAIT_TIME = 100
+
 
 camera = None
 
@@ -13,9 +12,9 @@ camera = None
 def Intitialise():
     global camera
 
-    if READ_FROM_PATH: return
+    if parameters.READ_FROM_CACHE: return
 
-    camera = cv2.VideoCapture(CAMERA_PORT, cv2.CAP_DSHOW)
+    camera = cv2.VideoCapture(parameters.CAMERA_PORT, cv2.CAP_DSHOW)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
@@ -25,25 +24,27 @@ def Intitialise():
 def Capture():
 
     # Either read cached image or capture a new one
-    if READ_FROM_PATH:
-        img = cv2.imread(PATH)
+    imagePath = os.path.join(parameters.TEMP_PATH, "original.png")
+
+    if parameters.READ_FROM_CACHE:
+        image = cv2.imread(imagePath)
     else:
 
         i = 0
-        while i < WAIT_TIME:
-            result, img = camera.read()
+        while i < parameters.CAMERA_WAIT_FRAMES:
+            result, imgage = camera.read()
             i += 1
-        cv2.imwrite("temp\\orig.png",img)
+        cv2.imwrite(imagePath,image)
 
 
     # Cut the image in half
-    width = img.shape[1]
+    width = image.shape[1]
     width_cutoff = width // 2
-    left = img[:, :width_cutoff]
-    right = img[:, width_cutoff:]
+    left = image[:, :width_cutoff]
+    right = image[:, width_cutoff:]
 
-    cv2.imwrite("temp\\left.png", left)
-    cv2.imwrite("temp\\right.png", right)
+    cv2.imwrite(os.path.join(parameters.TEMP_PATH, "left.png"), left)
+    cv2.imwrite(os.path.join(parameters.TEMP_PATH, "right.png"), right)
     
     return (left,right)
     
