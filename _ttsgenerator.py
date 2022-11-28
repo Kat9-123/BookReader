@@ -1,7 +1,5 @@
 import speaker
 
-text = "Initialising"
+text = "Press enter to capture an image."
 
-
-
-speaker.GenerateTTS(text,"TTS")
+speaker.GenerateTTS(text,"NewImage.mp3")

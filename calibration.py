@@ -1,13 +1,10 @@
 import cv2
-import speaker
 import reader
 import numpy as np
 
-CALIBRATION_STEP = 1
 
-
-CALIBRATION_START = 110
-CALIBRATION_END = 140
+CALIBRATION_START = 45#5
+CALIBRATION_END = 60#50
 
 
 # https://stackoverflow.com/questions/4993082/how-can-i-sharpen-an-image-in-opencv
@@ -35,13 +32,11 @@ def CalibrateSharpness(image):
     bestScore = 0
     bestSharpnessValue = -1
 
-    calibrationCount = (50 - 5)
-    print(calibrationCount)
-    for sharpnessValue in range(5,50):
+    for sharpnessValue in range(CALIBRATION_START,CALIBRATION_END):
 
 
         score = GetCalibrationScore(reader.Read(Sharpen(image,amount=sharpnessValue/10.0)))
-        print(sharpnessValue,score)
+        #print(sharpnessValue,score)
         if(score > bestScore): 
             bestSharpnessValue = sharpnessValue
             bestScore = score
@@ -50,6 +45,7 @@ def CalibrateSharpness(image):
     return bestSharpnessValue/10.0
        
 
+# Depricated
 """
 def Calibrate(image):
 

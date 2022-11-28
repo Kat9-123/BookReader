@@ -1,7 +1,6 @@
 from gtts import gTTS
 from pygame import mixer
 import time
-import random
 import os
 
 
@@ -20,15 +19,18 @@ def IsBusy():
     return mixer.music.get_busy()
         
 
+def PauseWhileBusy():
+    while IsBusy():
+        time.sleep(0.25)
 
 def Say(path, blocking=False):
-    music = mixer.music.load(path)
+    mixer.music.load(path)
     mixer.music.play()
+
+
     if(not blocking): return
 
-
-    while mixer.music.get_busy():
-        time.sleep(0.1)
+    PauseWhileBusy()
 
 
 def SayStandard(path, blocking=False):
@@ -38,6 +40,7 @@ def SayStandard(path, blocking=False):
 def GenerateTTS(text,name=""):
     global ttsCounter
 
+    # Max 4 cached files.
     if name == "":
         if(ttsCounter >= 4): ttsCounter = 0
 
@@ -49,6 +52,7 @@ def GenerateTTS(text,name=""):
     
 
     tts = gTTS(text=text, lang="en", tld="co.uk", slow=False)
+
     name = os.path.join(path)
     tts.save(name)
 
