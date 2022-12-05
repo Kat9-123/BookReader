@@ -32,7 +32,7 @@ def Capture():
 
         i = 0
         while i < parameters.CAMERA_WAIT_FRAMES:
-            result, imgage = camera.read()
+            result, image = camera.read()
             i += 1
         cv2.imwrite(imagePath,image)
 

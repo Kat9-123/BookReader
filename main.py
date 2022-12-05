@@ -44,8 +44,9 @@ def Read(image):
     print(text)
 
 
+
     # TTS Generation
-    if not speaker.IsBusy(): speaker.SayStandard("GeneratingTTS.mp3", False)
+   # if not speaker.IsBusy(): speaker.SayStandard("GeneratingTTS.mp3", False)
     print("Generating TTS...")
 
     tts = speaker.GenerateTTS(text)
